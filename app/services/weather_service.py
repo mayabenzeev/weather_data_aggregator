@@ -1,5 +1,6 @@
 import os
 import json
+
 from app.geocoding import fetch_coordinates
 from app.weather import fetch_weather
 from app.analyzer import Analyzer
@@ -36,14 +37,15 @@ def fetch_city_json(city: str, return_json: bool = False) -> dict:
         city: str
     Returns:
         dict"""
+    os.makedirs("data", exist_ok=True)
     
     if not __is_city_exists(city):
         lon, lat = fetch_coordinates(city)
         weather_data = fetch_weather(lon, lat)
-        with open(f"data/{city}.json", "w") as f:
+        with open(f"app/data/{city}.json", "w") as f:
             json.dump(weather_data, f)
     else:
-        with open(f"data/{city}.json", "r") as f:
+        with open(f"app/data/{city}.json", "r") as f:
             weather_data = json.load(f)
 
     if return_json:
@@ -52,5 +54,5 @@ def fetch_city_json(city: str, return_json: bool = False) -> dict:
 
 def __is_city_exists(city: str) -> bool:
     """Checks if the city is in the local folder of jsons (data fetched from open-meteo)"""
-    return os.path.exists(f"data/{city}.json")
+    return os.path.exists(f"app/data/{city}.json")
 

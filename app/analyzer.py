@@ -1,4 +1,3 @@
-
 class Analyzer:
     def __init__(self, weather_data: dict, city: str):
         self.city = city
@@ -7,6 +6,11 @@ class Analyzer:
         self.max_temprature = weather_data["daily"]["temperature_2m_max"]
         self.daylight_duration = weather_data["daily"]["daylight_duration"]
         self.rain_sum = weather_data["daily"]["rain_sum"]
+
+        self.min_temp_units = weather_data["daily_units"]["temperature_2m_min"]
+        self.max_temp_units = weather_data["daily_units"]["temperature_2m_max"]
+        self.daylight_units = weather_data["daily_units"]["daylight_duration"]
+        self.rain_units = weather_data["daily_units"]["rain_sum"]
 
     def generate_analysis(self) -> dict:
         """
@@ -24,16 +28,16 @@ class Analyzer:
         daylight_avg_duration = sum(self.daylight_duration) / len(self.daylight_duration)
         rain_avg_amount = sum(self.rain_sum) / len(self.rain_sum)
 
-        analysis["lowest_avg_temp"] = lowest_avg_temp
-        analysis["highest_avg_temp"] = highest_avg_temp
-        analysis["daylight_avg_duration"] = daylight_avg_duration
-        analysis["rain_avg_amount"] = rain_avg_amount
+        analysis["lowest_avg_temp"] = f"{lowest_avg_temp} {self.min_temp_units}"
+        analysis["highest_avg_temp"] = f"{highest_avg_temp} {self.max_temp_units}"
+        analysis["daylight_avg_duration"] = f"{(daylight_avg_duration / 60):.2f} minutes"
+        analysis["rain_avg_amount"] = f"{rain_avg_amount} {self.rain_units}"
 
         return analysis
     
     def generate_info_report(self) -> dict:
         """
-        Generate info report and return it as a beutified json.
+        Generate info report and return it as a beautified json.
         Args:
             weather_data: dict
         Returns:
@@ -42,23 +46,18 @@ class Analyzer:
         info_report = {}
         info_report["city"] = self.city
 
-        max_units = self.weather_data["daily_units"]["temperature_2m_max"]
-        min_units = self.weather_data["daily_units"]["temperature_2m_min"]
-        daylight_units = self.weather_data["daily_units"]["daylight_duration"]
-        rain_units = self.weather_data["daily_units"]["rain_sum"]
-
         dates = self.weather_data["daily"]["time"]
         max_temps = self.weather_data["daily"]["temperature_2m_max"]
         min_temps = self.weather_data["daily"]["temperature_2m_min"]
         daylight_durations = self.weather_data["daily"]["daylight_duration"]
         rain_amounts = self.weather_data["daily"]["rain_sum"]
 
-        for date in dates:
+        for i, date in enumerate(dates):
             info_report[date] = {
-                "max_temp": f"{max_temps[date]} {max_units}",
-                "min_temp": f"{min_temps[date]} {min_units}",
-                "daylight_duration": f"{daylight_durations[date]} {daylight_units}",
-                "rain_amount": f"{rain_amounts[date]} {rain_units}"
+                "max_temp": f"{max_temps[i]} {self.max_temp_units}",
+                "min_temp": f"{min_temps[i]} {self.min_temp_units}",
+                "daylight_duration": f"{daylight_durations[i]} {self.daylight_units}",
+                "rain_amount": f"{rain_amounts[i]} {self.rain_units}"
             }
 
         return info_report

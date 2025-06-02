@@ -1,8 +1,11 @@
 import argparse
+import os
+import requests
 
-def main():
-    parser = argparse.ArgumentParser(description="Weather Data Aggregator")
+# @app.post("/fetc_h")
+# def fetch_citiesweather():
+    
 
 
 if __name__ == "__main__":
-    main()
+

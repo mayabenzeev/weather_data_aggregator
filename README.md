@@ -1,6 +1,4 @@
-
-
-** Weather Data Aggregator **
+**Weather Data Aggregator**
 
 ## Context
 
@@ -12,7 +10,7 @@ The tool:
 - Generates simple analytics (e.g., hottest/coldest day, average temperature)
 - Allows retrieval via API and CLI
 
-**Tools used: ** Python, pip, and Docker.
+**Tools used:** Python, pip, and Docker.
 
 ---
 

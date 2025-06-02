@@ -1,72 +1,113 @@
-## *Weather Data Aggregator*
+# Weather Data Aggregator
 
+A tool that fetches, processes, and analyzes weather data for different cities.
 
-A tool that fetches, processes, and analyzes historical weather data for different cities.  
+## Quick Start
 
-## Features
+```bash
+# Build the container
+docker build -t weather .
 
-- Accepts a list of city names
-- Fetches weather data (past 7 days) from a public API (e.g., [Open-Meteo](https://open-meteo.com/))
-- Stores and processes the data
-- Generates simple analytics (e.g., hottest/coldest day, average temperature)
-- Allows retrieval via API and CLI
+# Run API server
+docker run --rm -p 8000:8000 -v $PWD/app/data:/app/data --entrypoint uvicorn weather app.api:app --host 0.0.0.0 --port 8000
+```
 
-**Tools used:** Python (`FastAPI`, `argsparse`, `pytest`) pip, and Docker.
+## REST API
 
----
+### 1. POST /fetch
+Fetches and stores weather data for given cities from open-meteo and saves it to the local folder.
 
-### Features & Running instructions
+Request:
+```bash
+curl -X POST http://localhost:8000/fetch \
+  -H "Content-Type: application/json" \
+  -d '{"cities": ["London", "Berlin"]}'
+```
 
-**1. CLI Tool**  
- Fetch
-  - Fetches and stores last 7 days’ weather data for listed cities.
-  - Saves data as `app/data/{city}.json`
+Response:
+```json
+{
+    "results": [
+        {
+            "city": "London",
+            "status": "success", 
+            "message": "Fetched weather data for London, saved in app/data/London.json"
+        },
+        {
+            "city": "Berlin",
+            "status": "success",
+            "message": "Fetched weather data for Berlin, saved in app/data/Berlin.json"
+        }
+    ]
+}
+```
 
-##### Run via Python terminal (need for python, pip and requirements.txt instllation):  
-  ```sh
+### 2. GET /analytics/{city}
+Returns the analytics of the weather of a city.
+
+```bash
+curl http://localhost:8000/analytics/London
+```
+
+Response:
+```json
+{
+    "city": "London",
+    "lowest_avg_temp": "12.257142857142856 °C", 
+    "highest_avg_temp": "18.485714285714288 °C",
+    "daylight_avg_duration": "985.93 minutes",
+    "rain_avg_amount": "1.342857142857143 mm"
+}
+```
+Includes hottest/coldest days, average temperature, and other analytics in JSON format.
+
+### 3. GET /data/{city}
+Returns the raw weather data of a city as JSON.
+
+```bash
+curl http://localhost:8000/data/London
+```
+
+## Error Handling
+
+All endpoints return error responses in the following format:
+```json
+{
+    "status": "error",
+    "message": "Failed to get data for Jerusalm: No location found for 'Jerusalm'"
+}
+```
+
+## CLI
+
+### Local Setup
+
+1. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Run locally:
+Via Python terminal: 
+  ```bash
   python app/main.py fetch --cities London Berlin Paris
   ```
-##### Run via Docker:
-```sh
-docker build -t weather .
-```
-  ```sh
-  docker run --rm -v $PWD/app/data:/app/data weather fetch --cities London Berlin Paris
-  ```
-Analyze
-  - Returns hottest/coldest days, average temperature, rain sum, and daylight duration.
-
-##### Run via Python terminal (need for python, pip and requirements.txt instllation):  
-  ```sh
+  ```bash
   python app/main.py analyze --city Tel\ Aviv
-  ```
-##### Run via Docker:
-```sh
-docker build -t weather .
-```
-  ```sh
-  docker run --rm -v $PWD/app/data:/app/data weather analyze --city Tel\ Aviv
-  ```
 
-**2. REST API**  
-#### Run the container for RestAPI
-```sh
-docker build -t weather .
-```
-```sh
- docker run -p 8000:8000 weather-app uvicorn app.api:app --host 0.0.0.0 --port 8000 
- ```
 
-#### Endpoints:
+### API Documentation
 
-- `POST /fetch`  
-  - Payload: `{ "cities": ["London", "Berlin"] }`
-  - Fetches and stores weather data for given cities.
+When the server is running, visit:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
 
-- `GET /analytics/{city}`  
-  - Returns analytics: - hottest/coldest days, average temperature, rain sum, and daylight duration.
+## Data Storage
 
-- `GET /data/{city}`  
-  - Returns raw weather data (as JSON).
-
----
+Weather data is stored in JSON files in the `app/data/` directory. Each city's data is stored in a separate file named `{city}.json`.

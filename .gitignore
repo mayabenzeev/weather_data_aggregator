@@ -1,0 +1,41 @@
+# Data files
+app/data/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Test output
+*.log
+*.tmp
+
+# Virtual environment
+venv/
+.env/
+.env.*
+
+# VSCode project settings
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Docker files
+# *.tar
+# *.pid
+
+# Compiled output
+build/
+dist/
+*.egg-info/
+
+# Summary/output artifacts
+/sample/summary.json
+
+# Ignore notebooks or user-specific temp files (optional)
+*.ipynb_checkpoints
+*.swp

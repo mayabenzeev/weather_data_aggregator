@@ -1,6 +1,6 @@
-# Junior Software Engineer Home Assignment
 
-**Assignment Title:** Weather Data Aggregator
+
+** Weather Data Aggregator **
 
 ## Context
 

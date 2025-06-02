@@ -2,18 +2,41 @@ import os
 import json
 from app.geocoding import fetch_coordinates
 from app.weather import fetch_weather
-from app.analysis_generator import Analyzer
+from app.analyzer import Analyzer
 
-def analyze_city_weather(city: str) -> str:
+def analyze_weather(city: str) -> str:
     """
     Analyze the weather of a city
-    If the city is not in the local folder of jsons,
-    it will fetch the weather data from open-meteo and save it to the local folder
     Args:
         city: str
     Returns:
         str
     """
+    weather_data = fetch_city_json(city, return_json=True)
+    analyzer = Analyzer(weather_data, city)
+    return analyzer.generate_analysis()
+    
+def get_weather_info(city: str) -> str:
+    """
+    Get the weather info of a city
+    Args:
+        city: str
+    Returns:
+        str
+    """
+    weather_data = fetch_city_json(city, return_json=True)
+    analyzer = Analyzer(weather_data, city)
+    return analyzer.generate_info_report()
+
+
+def fetch_city_json(city: str, return_json: bool = False) -> dict:
+    """
+    Get the city json from the local folder
+    Args:
+        city: str
+    Returns:
+        dict"""
+    
     if not __is_city_exists(city):
         lon, lat = fetch_coordinates(city)
         weather_data = fetch_weather(lon, lat)
@@ -23,9 +46,11 @@ def analyze_city_weather(city: str) -> str:
         with open(f"data/{city}.json", "r") as f:
             weather_data = json.load(f)
 
-    analyzer = Analyzer(weather_data, city)
-    return analyzer.generate_analysis()
+    if return_json:
+        return weather_data
+    
 
 def __is_city_exists(city: str) -> bool:
     """Checks if the city is in the local folder of jsons (data fetched from open-meteo)"""
     return os.path.exists(f"data/{city}.json")
+

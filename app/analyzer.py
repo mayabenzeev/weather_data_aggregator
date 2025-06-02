@@ -1,7 +1,4 @@
 
-from app.fetcher import fetch_cities_longlat, fetch_cities_weather
-
-
 class Analyzer:
     def __init__(self, weather_data: dict, city: str):
         self.city = city
@@ -31,4 +28,3 @@ class Analyzer:
         analysis_str += f"Total rain amount:  {str(rain_avg_amount)}\n"
         return analysis_str
 
-print(Analyzer(fetch_cities_weather(*fetch_cities_longlat("London")), "London").generate_analysis())

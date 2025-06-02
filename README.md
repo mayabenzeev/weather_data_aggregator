@@ -1,41 +1,34 @@
-# Junior Software Engineer Home Assignment
-
-**Assignment Title:** Weather Data Aggregator
+**Weather Data Aggregator**
 
 ## Context
 
-Your team needs a tool that fetches, processes, and analyzes historical weather data for different cities.  
-You are tasked with building a Python CLI and REST API that:
+A tool that fetches, processes, and analyzes historical weather data for different cities.  
+The tool:
 - Accepts a list of city names
 - Fetches weather data (past 7 days) from a public API (e.g., [Open-Meteo](https://open-meteo.com/))
 - Stores and processes the data
 - Generates simple analytics (e.g., hottest/coldest day, average temperature)
 - Allows retrieval via API and CLI
 
-You’ll use Python, pip, and Docker.
+**Tools used:** Python, pip, and Docker.
 
 ---
-
-## Assignment Requirements
-
-**Duration:** Complete in **no more than 3.5 hours**
 
 ### Technical Requirements
 
-- Use **Python 3.8+**
+- **Python 3.8+**
 - Package dependencies with **pip** (`requirements.txt`)
 - **Dockerize** your application
-- Must be cross-platform (Windows, macOS, Linux)
-- Must use a public weather API (suggested: [Open-Meteo free endpoints](https://open-meteo.com/en/docs))
-- CLI must be implemented with `argparse` or `click`
-- Expose a REST API with **FastAPI** or **Flask**
-- Store fetched data in local JSON files (one file per city)
-- Include **unit tests** with `pytest`
-- No database required
+- Cross-platform (Windows, macOS, Linux)
+- Public weather API (suggested: [Open-Meteo free endpoints](https://open-meteo.com/en/docs))
+- CLI implemented with `argparse` 
+- REST API with **FastAPI**
+- Fetched data is stored in local JSON files (one file per city)
+- **Unit tests** with `pytest`
 
 ---
 
-### Required Features
+### Features
 
 **1. CLI Tool**  
 - Command:  
